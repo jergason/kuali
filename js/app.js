@@ -1,69 +1,20 @@
 'use strict';
 
-import axios from 'axios';
 import React from 'react';
+import Router, { Route } from 'react-router';
 
-var numeral = require('numeral');
+import StarshipList from './StarshipList';
+import StarshipDetail from './StarshipDetail';
 
-const StartWars = React.createClass({
+import '../style.css';
 
-    getDefaultProps: function () {
-        return {};
-    },
+var routes = (
+    <Route>
+        <Route name="home" path="/" handler={StarshipList}/>
+        <Route name="detail" path="/detail/:starship" handler={StarshipDetail}/>
+    </Route>
+);
 
-    getInitialState: function () {
-        return {
-            starships: []
-        };
-    },
-
-    getStarships: function() {
-        axios.get('http://swapi.co/api/starships/').then((response) => {
-            this.setState({
-                starships: response.data.results
-            });
-        });
-    },
-
-    componentWillMount() {
-        this.getStarships();
-    },
-
-    componentWillReceiveProps(props) {
-        this.getStarships();
-    },
-
-    renderRows: function () {
-        return this.state.starships.map((row, idx) => {
-            return (
-                <tr key={idx}>
-                    <td>{row.name}</td>
-                    <td>{numeral(row.cost_in_credits).format('$0,0.00')}</td>
-                    <td>{numeral(row.cargo_capacity).format('0,0')}</td>
-                    <td>{row.starship_class}</td>
-                </tr>
-            );
-        });
-    },
-
-    render() {
-        return (
-            <table className="table table-striped">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Cargo Capacity</th>
-                    <th>Class</th>
-                </tr>
-                </thead>
-                <tbody>
-                {this.renderRows()}
-                </tbody>
-            </table>
-        );
-    }
+Router.run(routes, (Handler) => {
+    React.render(<Handler/>,  document.querySelector('.app'));
 });
-
-
-React.render(<StartWars/>, document.querySelector('.app'));
