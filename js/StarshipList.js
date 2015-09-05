@@ -10,7 +10,9 @@ export default React.createClass({
     mixins: [Navigation],
 
     getDefaultProps: function () {
-        return {};
+        return {
+            filterText: null
+        };
     },
 
     getInitialState: function () {
@@ -44,7 +46,14 @@ export default React.createClass({
     },
 
     renderRows: function () {
-        return this.state.starships.map((row, idx) => {
+        let filter = this.props.filterText ? this.props.filterText.toLowerCase() : null;
+
+        return this.state.starships.filter((row) => {
+            return !filter ||
+                (row.name.toLowerCase().includes(filter)) ||
+                (row.starship_class.toLowerCase().includes(filter)) ||
+                (row.manufacturer.toLowerCase().includes(filter));
+        }).map((row, idx) => {
             return (
                 <tr key={idx} onClick={this.handleClickRow.bind(this, row.url)}>
                     <td>{row.name}</td>

@@ -48,6 +48,9 @@ export default React.createClass({
     render() {
         return (
             <div>
+                <div>
+                    <button type="button" className="btn btn-primary" onClick={this.handleBackButtonClick}>Back</button>
+                </div>
                 <h1>{this.state.starship.name} </h1>
                 <ul class="list-unstyled">
                     <li><strong>Manufacturer: </strong>{this.state.starship.manufacturer}</li>
@@ -56,9 +59,6 @@ export default React.createClass({
                     <li><strong>Class: </strong>{this.state.starship.starship_class}</li>
                     <li><strong>Max Speed: </strong>{this.state.starship.max_atmosphering_speed}</li>
                 </ul>
-                <div>
-                    <button type="button" className="btn btn-primary" onClick={this.handleBackButtonClick}>Back</button>
-                </div>
             </div>
         );
     }
