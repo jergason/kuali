@@ -17,14 +17,24 @@ export default React.createClass({
 
     getInitialState: function () {
         return {
-            starships: []
+            starships: [],
+            next: null,
+            loading: true
         };
     },
 
-    getStarships: function() {
-        axios.get('http://swapi.co/api/starships/').then((response) => {
+    getStarships: function(url='http://swapi.co/api/starships/') {
+        this.setState({
+            loading: true
+        });
+
+        axios.get(url).then((response) => {
+            var existingStarships = this.state.starships;
+
             this.setState({
-                starships: response.data.results
+                starships: existingStarships.concat(response.data.results),
+                next: response.data.next,
+                loading:false
             });
         });
     },
@@ -43,6 +53,11 @@ export default React.createClass({
         var parts = url.split('/');
         var starship_id = parts[parts.length-2];
         this.transitionTo(`/detail/${starship_id}`);
+    },
+
+    handleLoadMoreClick(evt) {
+        evt.preventDefault();
+        this.getStarships(this.state.next);
     },
 
     renderRows: function () {
@@ -66,20 +81,41 @@ export default React.createClass({
     },
 
     render() {
+        var moreButton = null;
+        var loadingImage = null;
+
+        if(this.state.next) {
+            moreButton = (
+                <nav>
+                    <ul className="pager">
+                        <li><a href="#" onClick={this.handleLoadMoreClick}>Show More&hellip;</a></li>
+                    </ul>
+                </nav>
+            );
+        }
+        if(this.state.loading) {
+            loadingImage = <img src="/img/ajax-loader.gif" />;
+        }
+
+
         return (
-            <table className="table table-striped table-hover">
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Price</th>
-                    <th>Cargo Capacity</th>
-                    <th>Class</th>
-                </tr>
-                </thead>
-                <tbody>
-                {this.renderRows()}
-                </tbody>
-            </table>
+            <div>
+                <table className="table table-striped table-hover">
+                    <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Cargo Capacity</th>
+                        <th>Class</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    {this.renderRows()}
+                    </tbody>
+                </table>
+                {loadingImage}
+                {moreButton}
+            </div>
         );
     }
 });

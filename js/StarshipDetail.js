@@ -3,6 +3,7 @@
 import axios from 'axios';
 import React, { PropTypes } from 'react';
 import { Navigation } from 'react-router';
+import Breadcrumb from './Breadcrumb';
 
 var numeral = require('numeral');
 
@@ -19,7 +20,8 @@ export default React.createClass({
 
     getInitialState: function () {
         return {
-            starship: {}
+            starship: {},
+            loading: true
         };
     },
 
@@ -28,7 +30,8 @@ export default React.createClass({
 
         axios.get(`http://swapi.co/api/starships/${starship_id}/`).then((response) => {
             this.setState({
-                starship: response.data
+                starship: response.data,
+                loading: false
             });
         });
     },
@@ -41,25 +44,25 @@ export default React.createClass({
         this.getStarship();
     },
 
-    handleBackButtonClick() {
-        this.transitionTo('/');
-    },
-
     render() {
-        return (
-            <div>
+        if(this.state.loading) {
+            return (
+                <img src="/img/ajax-loader.gif" />
+            );
+        }else {
+            return (
                 <div>
-                    <button type="button" className="btn btn-primary" onClick={this.handleBackButtonClick}>Back</button>
+                    <Breadcrumb starship={this.state.starship} />
+                    <h1>{this.state.starship.name} </h1>
+                    <ul class="list-unstyled">
+                        <li><strong>Manufacturer: </strong>{this.state.starship.manufacturer}</li>
+                        <li><strong>Price: </strong>{this.state.starship.cost_in_credits}</li>
+                        <li><strong>Length: </strong>{this.state.starship.length}</li>
+                        <li><strong>Class: </strong>{this.state.starship.starship_class}</li>
+                        <li><strong>Max Speed: </strong>{this.state.starship.max_atmosphering_speed}</li>
+                    </ul>
                 </div>
-                <h1>{this.state.starship.name} </h1>
-                <ul class="list-unstyled">
-                    <li><strong>Manufacturer: </strong>{this.state.starship.manufacturer}</li>
-                    <li><strong>Price: </strong>{this.state.starship.cost_in_credits}</li>
-                    <li><strong>Length: </strong>{this.state.starship.length}</li>
-                    <li><strong>Class: </strong>{this.state.starship.starship_class}</li>
-                    <li><strong>Max Speed: </strong>{this.state.starship.max_atmosphering_speed}</li>
-                </ul>
-            </div>
-        );
+            );
+        }
     }
 });
