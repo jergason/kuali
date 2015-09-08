@@ -38,6 +38,7 @@ export default React.createClass({
                         data.results.forEach(function(item){
                             item.cost_in_credits = parseInt(item.cost_in_credits) || 0;
                             item.cargo_capacity = parseInt(item.cargo_capacity) || 0;
+                            item.num_pilots = item.pilots.length;
                         });
                     }
                     return data;
@@ -100,6 +101,7 @@ export default React.createClass({
                     <td>{numeral(row.cost_in_credits).format('0,0')}</td>
                     <td>{numeral(row.cargo_capacity).format('0,0')} kg</td>
                     <td>{row.starship_class}</td>
+                    <td>{row.num_pilots}</td>
                 </tr>
             );
         });
@@ -131,6 +133,7 @@ export default React.createClass({
                         <th onClick={this.handleSort.bind(this, 'cost_in_credits')}>Cost (in galactic credits)</th>
                         <th onClick={this.handleSort.bind(this, 'cargo_capacity')}>Cargo Capacity</th>
                         <th onClick={this.handleSort.bind(this, 'starship_class')}>Class</th>
+                        <th onClick={this.handleSort.bind(this, 'num_pilots')}>Pilots</th>
                     </tr>
                     </thead>
                     <tbody>
