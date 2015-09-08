@@ -12,7 +12,8 @@ export default React.createClass({
 
     getDefaultProps: function () {
         return {
-            filterText: null
+            filterText: null,
+            filterCost: null
         };
     },
 
@@ -82,19 +83,22 @@ export default React.createClass({
     },
 
     renderRows: function () {
-        let filter = this.props.filterText ? this.props.filterText.toLowerCase() : null;
+        let filterText = this.props.filterText ? this.props.filterText.toLowerCase() : null;
+        let filterCost = this.props.filterCost || null;
 
         return this.state.starships.filter((row) => {
-            return !filter ||
-                (row.name.toLowerCase().includes(filter)) ||
-                (row.starship_class.toLowerCase().includes(filter)) ||
-                (row.manufacturer.toLowerCase().includes(filter));
+            return !filterText ||
+                (row.name.toLowerCase().includes(filterText)) ||
+                (row.starship_class.toLowerCase().includes(filterText)) ||
+                (row.manufacturer.toLowerCase().includes(filterText));
+        }).filter((row) => {
+            return !filterCost || row.cost_in_credits <= filterCost;
         }).map((row, idx) => {
             return (
                 <tr key={idx} onClick={this.handleClickRow.bind(this, row.url)}>
                     <td>{row.name}</td>
-                    <td>{numeral(row.cost_in_credits).format('$0,0.00')}</td>
-                    <td>{numeral(row.cargo_capacity).format('0,0')}</td>
+                    <td>{numeral(row.cost_in_credits).format('0,0')}</td>
+                    <td>{numeral(row.cargo_capacity).format('0,0')} kg</td>
                     <td>{row.starship_class}</td>
                 </tr>
             );
@@ -124,7 +128,7 @@ export default React.createClass({
                     <thead>
                     <tr>
                         <th onClick={this.handleSort.bind(this, 'name')}>Name</th>
-                        <th onClick={this.handleSort.bind(this, 'cost_in_credits')}>Price</th>
+                        <th onClick={this.handleSort.bind(this, 'cost_in_credits')}>Cost (in galactic credits)</th>
                         <th onClick={this.handleSort.bind(this, 'cargo_capacity')}>Cargo Capacity</th>
                         <th onClick={this.handleSort.bind(this, 'starship_class')}>Class</th>
                     </tr>

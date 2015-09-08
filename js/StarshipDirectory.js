@@ -12,7 +12,8 @@ export default React.createClass({
 
     getInitialState: function () {
         return {
-            filterText: null
+            filterText: null,
+            filterCost: null
         };
     },
 
@@ -22,12 +23,28 @@ export default React.createClass({
         });
     },
 
+    handleFilterCostInputChange(evt) {
+        this.setState({
+           filterCost: evt.target.value
+        });
+    },
+
     render() {
         return (
             <div>
                 <Breadcrumb />
-                <input type="text" className="form-control" placeholder="Search..." onChange={this.handleFilterInputChange} />
-                <StarshipList filterText={this.state.filterText} />
+
+                <form className="form-inline row">
+                    <div className="form-group col-md-6">
+                        <input type="text" className="form-control" placeholder="Search text..." onChange={this.handleFilterInputChange} />
+                    </div>
+
+                    <div className="form-group col-md-6">
+                        <input type="text" className="form-control" placeholder="Filter by maximum cost..." onChange={this.handleFilterCostInputChange} />
+                    </div>
+                </form>
+
+                <StarshipList filterText={this.state.filterText} filterCost={this.state.filterCost} />
             </div>
         );
     }
