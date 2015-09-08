@@ -25,10 +25,10 @@ export default React.createClass({
         var items = [];
 
         if(this.props.starship) {
-            items.push(<li><a href="#/">Inventory</a></li>);
-            items.push((<li class="active">{this.props.starship.name}</li>));
+            items.push(<li key="0"><a href="#/">Inventory</a></li>);
+            items.push((<li key="1" class="active">{this.props.starship.name}</li>));
         }else {
-            items.push(<li>Inventory</li>);
+            items.push(<li key="0">Inventory</li>);
         }
 
         return items;

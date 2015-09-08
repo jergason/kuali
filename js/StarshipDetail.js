@@ -40,10 +40,6 @@ export default React.createClass({
         this.getStarship();
     },
 
-    componentWillReceiveProps(props) {
-        this.getStarship();
-    },
-
     render() {
         if(this.state.loading) {
             return (
